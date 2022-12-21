@@ -8,6 +8,7 @@ var app = express()
 app.use(cors())
 require('./db/config')
 const User=require('./db/User');
+const { eventNames } = require('./db/User')
 app.use(express.json())
 
 app.get("/password_requirements",async(req,res)=>{
@@ -82,5 +83,5 @@ app.post("/reset", async(req,resp)=>{
    }
   
 })
-
- app.listen(5000);
+var port=5000 || process.env.PORT;
+ app.listen(port);
