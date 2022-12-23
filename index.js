@@ -21,6 +21,10 @@ app.get("/password_requirements",async(req,res)=>{
    "min_chars": 8 } 
    res.send(requiremnts);
 })
+
+app.get("/",async(req,res)=>{ 
+   res.send("done");
+})
 app.post("/register",async(req,resp)=>{
    let person=req.body;
    let authentication_token="hello";
