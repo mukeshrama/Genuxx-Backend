@@ -42,27 +42,27 @@ app.post("/register",async(req,resp)=>{
    })
 })
 app.post("/login", async(req,resp)=>{
-   if(req.body.password && req.body.email){
-      console.log(req.body);
-      let user =await User.findOne(req.body);
-      console.log(user);
-      if(user.person.password===req.body.password){
-         Jwt.sign({user},jwtKey,{expiresIn:"2h"},(err,token)=>{
-            if(err){
-               resp.send({result:'Something Went Wrong Please Try After Sometime...'});
-            }
-            console.log(user);
-            resp.send({user,auth:token});
-         })
-      }
-      else{
-         resp.send({result:'No user found'});
-      }
-   }
-   else{
-       resp.send({result:'No user found'});
-   }
-  
+   // if(req.body.password && req.body.email){
+   //    console.log(req.body);
+   //    let user =await User.findOne(req.body);
+   //    console.log(user);
+   //    if(user.person.password===req.body.password){
+   //       Jwt.sign({user},jwtKey,{expiresIn:"2h"},(err,token)=>{
+   //          if(err){
+   //             resp.send({result:'Something Went Wrong Please Try After Sometime...'});
+   //          }
+   //          console.log(user);
+   //          resp.send({user,auth:token});
+   //       })
+   //    }
+   //    else{
+   //       resp.send({result:'No user found'});
+   //    }
+   // }
+   // else{
+   //     resp.send({result:'No user found'});
+   // }
+  resp.send("login")
 })
 
 app.post("/reset", async(req,resp)=>{
