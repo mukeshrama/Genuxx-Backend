@@ -21,9 +21,12 @@ app.get("/passwordrequirements",async(req,res)=>{
    res.send(requiremnts);
 })
 
-app.get("/",async(req,res)=>{ 
+app.get("/",async(req,resp)=>{ 
    let user =await User.find();
-   resp.send(user);
+   if(user!={})
+      resp.send(user);
+   else
+      resp.send("done")
 })
 app.post("/register",async(req,resp)=>{
    let person=req.body;
