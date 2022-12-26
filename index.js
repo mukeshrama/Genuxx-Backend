@@ -8,7 +8,6 @@ var app = express()
 app.use(cors())
 require('./db/config')
 const User=require('./db/User');
-const { eventNames } = require('./db/User')
 app.use(express.json())
 
 app.get("/passwordrequirements",async(req,res)=>{
@@ -23,7 +22,8 @@ app.get("/passwordrequirements",async(req,res)=>{
 })
 
 app.get("/",async(req,res)=>{ 
-   res.send("done");
+   let user =await User.find();
+   resp.send(user);
 })
 app.post("/register",async(req,resp)=>{
    let person=req.body;
@@ -43,15 +43,12 @@ app.post("/register",async(req,resp)=>{
 })
 app.post("/login", async(req,resp)=>{
    if(req.body.password && req.body.email){
-      console.log(req.body);
       let user =await User.findOne(req.body);
-      console.log(user);
       if(user.person.password===req.body.password){
          Jwt.sign({user},jwtKey,{expiresIn:"2h"},(err,token)=>{
             if(err){
                resp.send({result:'Something Went Wrong Please Try After Sometime...'});
             }
-            console.log(user);
             resp.send({user,auth:token});
          })
       }
@@ -66,9 +63,7 @@ app.post("/login", async(req,resp)=>{
 
 app.post("/reset", async(req,resp)=>{
    if(req.body.email){
-      console.log(req.body);
       let user =await User.findOne(req.body);
-      console.log(user);
       if(user.person.email===req.body.email){
          Jwt.sign({user},jwtKey,{expiresIn:"2h"},(err,token)=>{
             if(err){
@@ -86,5 +81,20 @@ app.post("/reset", async(req,resp)=>{
    }
   
 })
+
+app.get("/userlist",async (req, resp)=>{
+   try{
+      const limitValue = req.query.limit || 2;
+      const skipValue = req.query.skip || 0;
+      const userdata=await User.find().limit(limitValue).skip(skipValue);
+      delete userdata.authentication_token;
+      console.log(userdata);
+      resp.send(userdata)
+   }
+   catch (e) {
+         resp.send({"msg":'No user found'});
+      }
+})
+
 var port=5000 || process.env.PORT;
  app.listen(port);
