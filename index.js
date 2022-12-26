@@ -85,7 +85,7 @@ app.post("/reset", async(req,resp)=>{
 
 app.get("/userlist",async (req, resp)=>{
    try{
-      const limitValue = req.query.limit || 2;
+      const limitValue = req.query.limit || 10;
       const skipValue = req.query.skip || 0;
       const userdata=await User.find().limit(limitValue).skip(skipValue);
       delete userdata.authentication_token;
