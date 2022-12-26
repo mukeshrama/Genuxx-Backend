@@ -85,11 +85,11 @@ app.post("/reset", async(req,resp)=>{
 
 app.get("/userlist",async (req, resp)=>{
    try{
-      const limitValue = req.query.limit || 1;
+      const limitValue = req.query.limit || 10;
       const skipValue = req.query.skip || 0;
       const userdata=await User.find().limit(limitValue).skip(skipValue);
-      userdata=userdata.toObject();
-      delete userdata.authentication_token;
+      // userdata=userdata.toObject();
+      // delete userdata.authentication_token;
       console.log(userdata);
       resp.send(userdata)
    }
