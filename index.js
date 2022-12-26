@@ -6,7 +6,7 @@ const jwtKey='Genux'
 
 var app = express()
 app.use(cors())
-require('./db/config')
+const dbconnection=require('./db/config')
 const User=require('./db/User');
 app.use(express.json())
 
@@ -22,15 +22,11 @@ app.get("/passwordrequirements",async(req,res)=>{
 })
 
 app.get("/",async(req,resp)=>{ 
-   let user =await User.find();
-   if(user!={})
-      resp.send(user);
-   else
-      resp.send("done")
+   resp.send("connected");
 })
 app.post("/register",async(req,resp)=>{
    let person=req.body;
-   let authentication_token="hello";
+   let authentication_token="";
    let user=new User({authentication_token,person});
    let result= await user.save();
    result=result.toObject(); 
@@ -40,7 +36,9 @@ app.post("/register",async(req,resp)=>{
       }
       user.authentication_token=token;
       result=await user.save();
-      delete result.password;
+      result=result.toObject(); 
+      delete result.person.password;
+      console.log(result);
       resp.send({result});
    })
 })
