@@ -45,16 +45,21 @@ app.post("/register",async(req,resp)=>{
 app.post("/login", async(req,resp)=>{
    if(req.body.password && req.body.email){
       let user =await User.findOne(req.body.email);
-      if(user.person.password===req.body.password){
-         Jwt.sign({user},jwtKey,{expiresIn:"2h"},(err,token)=>{
-            if(err){
-               resp.send({result:'Something Went Wrong Please Try After Sometime...'});
-            }
-            resp.send({user,auth:token});
-         })
+      if(user){
+         if(user.person.password===req.body.password){
+            Jwt.sign({user},jwtKey,{expiresIn:"2h"},(err,token)=>{
+               if(err){
+                  resp.send({result:'Something Went Wrong Please Try After Sometime...'});
+               }
+               resp.send({user,auth:token});
+            })
+         }
+         else{
+            resp.send({result:"Email id and Password doesn't match"});
+         }
       }
       else{
-         resp.send({result:"Email id and Password doesn't match"});
+         resp.send({result:'No user found'});
       }
    }
    else{
