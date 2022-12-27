@@ -8,6 +8,7 @@ var app = express()
 app.use(cors())
 const dbconnection=require('./db/config')
 const User=require('./db/User');
+const DeletedUser=require('./db/DeletedUser');
 app.use(express.json())
 
 app.get("/passwordrequirements",async(req,res)=>{
@@ -88,10 +89,55 @@ app.get("/userlist",async (req, resp)=>{
       const limitValue = req.query.limit || 10;
       const skipValue = req.query.skip || 0;
       const userdata=await User.find().limit(limitValue).skip(skipValue);
-      // userdata=userdata.toObject();
-      // delete userdata.authentication_token;
-      console.log(userdata);
       resp.send(userdata)
+   }
+   catch (e) {
+         resp.send({"msg":'No user found'});
+      }
+})
+
+app.get("/userlist/:key",async (req, resp)=>{
+   try{
+      const limitValue = req.query.limit || 10;
+      const skipValue = req.query.skip || 0;
+      const userdata=await User.find({
+         "$or":[
+                  {"person.display_name":{$regex:req.params.key}},
+                  {"person.email":{$regex:req.params.key}}
+               ]
+      }).limit(limitValue).skip(skipValue);
+      resp.send(userdata)
+   }
+   catch (e) {
+         resp.send({"msg":'No user found'});
+      }
+})
+
+
+app.get("/sortlist",async (req, resp)=>{
+   try{
+      const limitValue = req.query.limit || 10;
+      const skipValue = req.query.skip || 0;
+      const userdata=await User.find().sort({"person.display_name":-1}).limit(limitValue).skip(skipValue)
+      resp.send(userdata)
+   }
+   catch (e) {
+         resp.send({"msg":'No user found'});
+      }
+})
+
+app.delete('/deleteuser/:email',async (req, resp)=>{
+   try{
+      const userdata=await User.find({"person.email":req.params.email})
+      if(Object.keys(userdata[0]).length!==0){
+        const data=userdata[0];
+        const deletedUser = await DeletedUser.insertMany(data);
+        const user=await User.deleteOne({"person.email":req.params.email})
+        if(user.acknowledged===true)
+               resp.send({"msg":"Successfully Deleted"});
+        else
+            resp.send({"msg":'No user found'});
+      }
    }
    catch (e) {
          resp.send({"msg":'No user found'});
