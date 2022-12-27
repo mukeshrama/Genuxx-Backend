@@ -54,7 +54,7 @@ app.post("/login", async(req,resp)=>{
          })
       }
       else{
-         resp.send({result:'Password is wrong'});
+         resp.send({result:"Email id and Password doesn't match"});
       }
    }
    else{
