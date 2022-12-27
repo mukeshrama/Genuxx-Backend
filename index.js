@@ -39,7 +39,6 @@ app.post("/register",async(req,resp)=>{
       result=await user.save();
       result=result.toObject(); 
       delete result.person.password;
-      console.log(result);
       resp.send({result});
    })
 })
@@ -55,7 +54,7 @@ app.post("/login", async(req,resp)=>{
          })
       }
       else{
-         resp.send({result:'No user found'});
+         resp.send({result:'Password is wrong'});
       }
    }
    else{
