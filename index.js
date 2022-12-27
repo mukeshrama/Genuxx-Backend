@@ -44,7 +44,7 @@ app.post("/register",async(req,resp)=>{
 })
 app.post("/login", async(req,resp)=>{
    if(req.body.password && req.body.email){
-      let user =await User.findOne(req.body);
+      let user =await User.findOne(req.body.email);
       if(user.person.password===req.body.password){
          Jwt.sign({user},jwtKey,{expiresIn:"2h"},(err,token)=>{
             if(err){
