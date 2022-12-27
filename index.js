@@ -44,13 +44,16 @@ app.post("/register",async(req,resp)=>{
 })
 app.post("/login", async(req,resp)=>{
    if(req.body.password && req.body.email){
-      let user =await User.findOne(req.body.email);
+      let user =await User.findOne({"person.email":{$regex:req.body.email}});
       if(user){
          if(user.person.password===req.body.password){
-            Jwt.sign({user},jwtKey,{expiresIn:"2h"},(err,token)=>{
+            Jwt.sign({user},jwtKey,{expiresIn:"2h"},async (err,token)=>{
                if(err){
                   resp.send({result:'Something Went Wrong Please Try After Sometime...'});
-               }
+               } 
+               const filter = { "person.email": req.body.email };
+               const date={"person.updated_at":new Date()};
+               const updated=await User.updateOne(filter,date);
                resp.send({user,auth:token});
             })
          }
