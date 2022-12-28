@@ -121,11 +121,12 @@ app.get("/userlist/:key",async (req, resp)=>{
 })
 
 
-app.get("/sortlist",async (req, resp)=>{
+app.get("/sortlist/:value",async (req, resp)=>{
    try{
       const limitValue = req.query.limit || 10;
       const skipValue = req.query.skip || 0;
-      const userdata=await User.find().sort({"person.display_name":1}).limit(limitValue).skip(skipValue)
+      const value=req.params.value;
+      const userdata=await User.find().sort({"person.display_name":value}).limit(limitValue).skip(skipValue)
       resp.send(userdata)
    }
    catch (e) {
