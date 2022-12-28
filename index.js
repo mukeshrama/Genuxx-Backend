@@ -154,7 +154,9 @@ app.delete('/deleteuser/:email',async (req, resp)=>{
 
 app.get('/deleteuserlist',async (req, resp)=>{
    try{
-      const deletedUser=await DeletedUser.find()
+      const limitValue = req.query.limit || 10;
+      const skipValue = req.query.skip || 0;
+      const deletedUser=await DeletedUser.find().limit(limitValue).skip(skipValue);
       if(Object.keys(deletedUser[0]).length!==0){
         resp.send(deletedUser);
       }
