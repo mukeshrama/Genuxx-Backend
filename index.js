@@ -152,5 +152,19 @@ app.delete('/deleteuser/:email',async (req, resp)=>{
       }
 })
 
+app.get('/deleteuserlist',async (req, resp)=>{
+   try{
+      const deletedUser=await DeletedUser.find()
+      if(Object.keys(deletedUser[0]).length!==0){
+        resp.send(deletedUser);
+      }
+      else
+      resp.send({"msg":'No user found'});
+   }
+   catch (e) {
+         resp.send({"msg":`Something went wrong ${e}`});
+      }
+})
+
 var port=5000 || process.env.PORT;
  app.listen(port);
